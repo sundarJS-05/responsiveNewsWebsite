@@ -1,9 +1,14 @@
-import React from 'react'
+
+"use client"
+
+import React, { useState } from 'react'
 
 import logo from '@/assets/images/logo.svg'
 import Link from 'next/link'
 import { AiOutlineClose } from "react-icons/ai";
 import { IoMdMenu } from "react-icons/io";
+
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 
 let links = [ 
     {
@@ -28,7 +33,9 @@ let links = [
     }
 ]
 
-function MobileNavLinks(){
+function MobileNavLinks(setMenuOpen){
+
+
     return (
         <div className='flex justify-between py-5'>
             {/* <img src='https://raw.githubusercontent.com/whoisseth/news-homepage/c237438c7ea2bb5c725112fc631e6dc42eefa284/src/assets/images/logo.svg' alt='logo'/> */}
@@ -60,7 +67,7 @@ function MobileNavLinks(){
                     <div className='flex flex-col gap-8 bg-white h-full w-[40%] '>
     
                     <div className='flex w-full justify-end'>
-                    <AiOutlineClose className='text-7xl cursor-pointer'/>
+                    <AiOutlineClose className='text-7xl cursor-pointer'  onClick={ ()=> ( setMenuOpen(false))}/>
                     </div>
     
                         {
@@ -86,7 +93,10 @@ function MobileNavLinks(){
 }
 
 export default function Navbar() {
+    
+    let [menuOpen, setMenuOpen] = useState(false)
 
+    const [animationParent] = useAutoAnimate()
 
 
   return (
@@ -94,19 +104,6 @@ export default function Navbar() {
         {/* <img src='https://raw.githubusercontent.com/whoisseth/news-homepage/c237438c7ea2bb5c725112fc631e6dc42eefa284/src/assets/images/logo.svg' alt='logo'/> */}
 
         {/* for Links */}
-        <div className='gap-4 items-center flex hidden sm:flex'>
-
-            {
-                links.map(  (data,index)=> (
-                    <Link className=' hover:text-yellow-500 transition-none'  key={index} href={data.href}>
-                    {data.title}
-                        
-                    </Link> )
-            ) 
-            }     
-         
-        </div>
-
 
 
         <div className='fixed flex h-screen bg-black opacity-20 w-full justify-end'>
@@ -117,11 +114,7 @@ export default function Navbar() {
             <div className='flex flex-col gap-8'>
 
 
-                <div className='flex flex-col gap-8 bg-white h-full w-[40%] '>
-
-                <div className='flex w-full justify-end'>
-                <AiOutlineClose className='text-7xl cursor-pointer'/>
-                </div>
+                <div className='flex flex-col gap-8 bg-white h-full w-[40%] ' ref={animationParent}>
 
                     {
                         links.map(  (data,index)=> (
@@ -132,18 +125,24 @@ export default function Navbar() {
                     ) 
                     }     
                  </div>
+
+                 <div className='flex w-full justify-end'>
+                <AiOutlineClose className='text-7xl cursor-pointer'/>
+                </div>
              
             </div>
 
             </div>
 
-            <MobileNavLinks/>
-
-
-
         </div>
 
-        <IoMdMenu className='text-7xl'/>
+         { menuOpen && <MobileNavLinks   setMenuOpen={setMenuOpen}  />  } 
+
+        <IoMdMenu className='text-7xl  cursor-pointer sm:hidden'  
+        onClick={  ()=>( setMenuOpen(true))  }
+    
+        
+        />
 
 
     </div>
